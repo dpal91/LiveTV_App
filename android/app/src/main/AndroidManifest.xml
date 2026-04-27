@@ -7,7 +7,7 @@
         android:name="android.software.leanback"
         android:required="true" />
     <application
-        android:label="testlive"
+        android:label="Live TV"
         android:usesCleartextTraffic="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
