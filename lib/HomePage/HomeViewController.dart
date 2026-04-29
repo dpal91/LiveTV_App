@@ -5,6 +5,7 @@ import 'package:screen_brightness/screen_brightness.dart';
 import 'package:testlive/APIService/APIService.dart';
 import 'package:testlive/HomePage/models.dart';
 import 'package:video_player/video_player.dart';
+import 'package:volume_controller/volume_controller.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 class HomeController extends GetxController {
@@ -18,8 +19,10 @@ class HomeController extends GetxController {
   Rx<VideoPlayerController?> videoController = Rx<VideoPlayerController?>(null);
   RxString searchText = ''.obs;
   List<double> aspectList = [];
-  double currentBrightness = 0.5;
+  double currentBrightness = 0.0;
+  double currentVolume = 0.0;
   var showBrightnessUI = false.obs;
+  var showVolumeUI = false.obs;
 
   var aspectIndex = 0;
   var aspectRation = 0.0.obs;
@@ -59,8 +62,8 @@ class HomeController extends GetxController {
         groupTitle = groupRegex.firstMatch(line)?.group(1) ?? 'Other';
       } else if (line.startsWith('http') && title != null) {
         final channel = buildChannel(
-          title: title!,
-          description: title!,
+          title: title,
+          description: title,
           studio: groupTitle ?? 'Other',
           videoUrl: line,
           cardImageUrl: imageUrl ?? '',
@@ -186,6 +189,9 @@ class HomeController extends GetxController {
     if (selectedCategoryIndex.value > filteredCategories.length - 1) {
       selectedCategoryIndex.value = filteredCategories.length - 1;
     }
+    if (selectedCategoryIndex.value < 0 && filteredCategories.length >= 0) {
+      selectedCategoryIndex.value = 0;
+    }
     update(); // Trigger UI update
   }
 
@@ -203,7 +209,7 @@ class HomeController extends GetxController {
 
   enablePlayController() {
     showPlayController.value = true;
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       showPlayController.value = false;
     });
   }
@@ -217,6 +223,7 @@ class HomeController extends GetxController {
     ];
     aspectRation.value = aspectList[aspectIndex];
     currentBrightness = await ScreenBrightness().current;
+    currentVolume = await VolumeController().getVolume();
   }
 
   nextAspectRation() {
@@ -240,6 +247,24 @@ class HomeController extends GetxController {
     await ScreenBrightness().setScreenBrightness(currentBrightness);
     Future.delayed(const Duration(seconds: 1), () {
       showBrightnessUI.value = false;
+    });
+  }
+
+  changeVolume(double delta) async {
+    showVolumeUI.value = true;
+    const sensitivity = 0.01;
+
+    if (delta > 0) {
+      currentVolume -= sensitivity;
+    } else {
+      currentVolume += sensitivity;
+    }
+    currentVolume = currentVolume.clamp(0.0, 1.0);
+
+    VolumeController().setVolume(currentVolume);
+
+    Future.delayed(const Duration(seconds: 1), () {
+      showVolumeUI.value = false;
     });
   }
 }

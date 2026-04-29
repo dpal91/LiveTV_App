@@ -11,7 +11,7 @@ class ChannelGrid extends StatelessWidget {
   final List<Channel> channels;
   final FocusNode focusNode;
 
-  HomeController controller = Get.find();
+  final HomeController controller = Get.find<HomeController>();
 
   ChannelGrid({
     super.key,

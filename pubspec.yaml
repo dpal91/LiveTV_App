@@ -35,7 +35,7 @@ dependencies:
   get: ^4.7.3
   wakelock_plus: ^1.2.0
   screen_brightness: ^0.2.2
- 
+  volume_controller: ^2.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -43,9 +43,9 @@ dependencies:
   cupertino_icons: ^1.0.6
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
+  flutter_driver:
+    sdk: flutter 
+  test: any
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
