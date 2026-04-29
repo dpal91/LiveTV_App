@@ -16,11 +16,11 @@ class Channel {
   });
 }
 
-class Category {
+class Categories {
   final String name;
   final List<Channel> channels;
 
-  Category({
+  Categories({
     required this.name,
     required this.channels,
   });

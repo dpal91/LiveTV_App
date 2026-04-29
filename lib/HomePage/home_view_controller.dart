@@ -1,8 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:screen_brightness/screen_brightness.dart';
-import 'package:testlive/APIService/APIService.dart';
+import 'package:testlive/APIService/api_service.dart';
 import 'package:testlive/HomePage/models.dart';
 import 'package:video_player/video_player.dart';
 import 'package:volume_controller/volume_controller.dart';
@@ -10,8 +11,8 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 class HomeController extends GetxController {
   var playlist = "".obs;
-  RxList<Category> categories = <Category>[].obs;
-  RxList<Category> filteredCategories = <Category>[].obs;
+  RxList<Categories> categories = <Categories>[].obs;
+  RxList<Categories> filteredCategories = <Categories>[].obs;
   var showCategories = true.obs;
   var selectedCategoryIndex = 0.obs;
   var selectedChannelIndex = (-1).obs;
@@ -38,11 +39,13 @@ class HomeController extends GetxController {
     playlist.value += await APIService.fetchPlaylist(
         "https://raw.githubusercontent.com/iptv-org/iptv/master/streams/in.m3u");
     categories.value = setupChannelsByCategory(playlist.value);
-    filteredCategories.value = categories.value;
-    print(categories.length.toString());
+    filteredCategories.value = categories;
+    if (kDebugMode) {
+      print(categories.length.toString());
+    }
   }
 
-  List<Category> setupChannelsByCategory(String playlist) {
+  List<Categories> setupChannelsByCategory(String playlist) {
     final Map<String, List<Channel>> categoryMap = {};
 
     String? title;
@@ -108,7 +111,7 @@ class HomeController extends GetxController {
     }).map((entry) {
       final name = entry.key;
 
-      return Category(
+      return Categories(
         name: name.isEmpty
             ? 'AA'
             : name.replaceAll(';', ' ').toLowerCase().replaceFirst(
@@ -132,8 +135,8 @@ class HomeController extends GetxController {
     showCategories.value = true;
   }
 
-  Category get selectedCategory => filteredCategories.isEmpty
-      ? Category(name: 'Empty', channels: [])
+  Categories get selectedCategory => filteredCategories.isEmpty
+      ? Categories(name: 'Empty', channels: [])
       : filteredCategories[selectedCategoryIndex.value];
 
   VideoPlayerController? get currentVideoController => videoController.value;
@@ -154,7 +157,9 @@ class HomeController extends GetxController {
   }
 
   void updateSearchText(String text) {
-    print(text);
+    if (kDebugMode) {
+      print(text);
+    }
     searchText.value = text;
     filterCategories();
   }
@@ -162,9 +167,9 @@ class HomeController extends GetxController {
   void filterCategories() {
     if (searchText.value.isEmpty) {
       filteredCategories.value =
-          categories.value; // Show all categories if no search text
+          categories; // Show all categories if no search text
     } else {
-      filteredCategories.value = categories.value.map((category) {
+      filteredCategories.value = categories.map((category) {
         // Filter the channels within each category by the channel name
         List<Channel> filteredChannels = category.channels.where((channel) {
           // Ensure the channel.name is a String, and check if it contains the searchText
@@ -173,9 +178,11 @@ class HomeController extends GetxController {
               .contains(searchText.value.toLowerCase());
         }).toList();
 
-        print(filteredChannels.length);
+        if (kDebugMode) {
+          print(filteredChannels.length);
+        }
         // Return a new category with filtered channels
-        return Category(
+        return Categories(
           name: category.name, // Keep the original category name
           channels: filteredChannels,
         );
@@ -184,12 +191,14 @@ class HomeController extends GetxController {
         return category.channels.isNotEmpty;
       }).toList();
     }
-    print(filteredCategories.length);
+    if (kDebugMode) {
+      print(filteredCategories.length);
+    }
 
     if (selectedCategoryIndex.value > filteredCategories.length - 1) {
       selectedCategoryIndex.value = filteredCategories.length - 1;
     }
-    if (selectedCategoryIndex.value < 0 && filteredCategories.length >= 0) {
+    if (selectedCategoryIndex.value < 0 && filteredCategories.isNotEmpty) {
       selectedCategoryIndex.value = 0;
     }
     update(); // Trigger UI update

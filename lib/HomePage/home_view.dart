@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:testlive/HomePage/CategoryPannel.dart';
-import 'package:testlive/HomePage/ChannelGrid.dart';
-import 'package:testlive/HomePage/HomeViewController.dart';
-import 'package:testlive/HomePage/Searchbar.dart';
+import 'package:testlive/HomePage/category_pannel.dart';
+import 'package:testlive/HomePage/channel_grid.dart';
+import 'package:testlive/HomePage/home_view_controller.dart';
+import 'package:testlive/HomePage/search_bar.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({super.key});

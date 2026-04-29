@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:testlive/APIService/APIService.dart';
-import 'package:testlive/HomePage/HomeViewController.dart';
+import 'package:testlive/APIService/api_service.dart';
+import 'package:testlive/HomePage/home_view_controller.dart';
 import 'package:testlive/HomePage/models.dart';
 import 'package:get/get.dart';
-import 'package:testlive/VideoPlayerScreen.dart/VideoPlayer.dart';
+import 'package:testlive/VideoPlayerScreen.dart/video_player.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 class ChannelGrid extends StatelessWidget {

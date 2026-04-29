@@ -1,12 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
-import 'package:testlive/HomePage/HomeViewController.dart';
-import 'package:testlive/main.dart';
+import 'package:test/scaffolding.dart';
 
 void main() {
-
-
   setUp(() {
     Get.testMode = true;
 
@@ -18,5 +13,4 @@ void main() {
   tearDown(() {
     Get.reset(); // clean up after each test
   });
-
 }

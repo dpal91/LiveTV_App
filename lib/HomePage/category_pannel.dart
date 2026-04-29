@@ -1,8 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:testlive/HomePage/models.dart';
 
 class CategoryPanel extends StatelessWidget {
-  final List<Category> categories;
+  final List<Categories> categories;
   final int selectedIndex;
   final Function(int) onSelect;
   final FocusNode focusNode;
@@ -26,7 +27,9 @@ class CategoryPanel extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
-              print('Selected: ${categories[index].name}');
+              if (kDebugMode) {
+                print('Selected: ${categories[index].name}');
+              }
               onSelect(index);
             },
             child: Container(
